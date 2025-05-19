@@ -9,19 +9,37 @@ import socket
 import AcraNetwork.IRIG106.Chapter7 as ch7
 import AcraNetwork.iNetX as ix
 import logging
+import argparse
 
+VERSION = "0.1"
 OFFSET_TO_INETX = 0x2A
-MIN_INETX_PKT_LEN = 1000
-INETX_SID = 0xDC
+INETX_HEADER_LEN = 28
 CH7_OFFSET = 0
+MIN_INETX_PKT_LEN = OFFSET_TO_INETX + INETX_HEADER_LEN
+
 
 logging.basicConfig(level=logging.INFO)
 
 
-def main(rx_port: int):
+def auto_int(x):
+    return int(x, 0)
+
+
+def create_parser():
+    # Argument parser
+    parser = argparse.ArgumentParser(description="Extract ch7 payload and retransmit")
+    # Common
+    parser.add_argument("--streamid", type=auto_int, required=True, default=0xDC, help="stream ID of the inetx packet")
+    parser.add_argument("--interface", type=str, required=False, default="eth0", help="ethernet interface")
+    parser.add_argument("--version", action="version", version="%(prog)s {}".format(VERSION))
+
+    return parser
+
+
+def main(streamid: int, device: str):
     sock = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
-    sock.settimeout(2)
-    sock.bind(("eth0", 0x3))
+    sock.settimeout(None)
+    sock.bind((device, 0x3))
     remainder = None
 
     eth_p = bytes()
@@ -40,7 +58,7 @@ def main(rx_port: int):
                 pass
             else:
                 logging.debug(f"Received inetx packet={repr(inetx_pkt)}")
-                if inetx_pkt.streamid == INETX_SID:
+                if inetx_pkt.streamid == streamid:
                     ch7_buffer = inetx_pkt.payload[CH7_OFFSET:]
                     logging.debug(f"ch7_buf_len = {len(ch7_buffer)}")
                     ch7_pkt = ch7.PTFR()
@@ -63,4 +81,6 @@ def main(rx_port: int):
 
 
 if __name__ == "__main__":
-    main(3399)
+    parser = create_parser()
+    args = parser.parse_args()
+    main(args.streamid, args.interface)
