@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+
+"""
+Test parsing the xidml
+
+"""
+
 import ParseXML
 import logging
 import argparse
