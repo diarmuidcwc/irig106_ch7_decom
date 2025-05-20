@@ -1,0 +1,679 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xidml Version="3.0.1">
+  <Documentation>
+    <CreatedBy>Product Name=DAS Studio 3,Version=3.4.34,[kSetup 1.2.0 (Build 12517)]</CreatedBy>
+    <CreatedDate>05/20/2025 08:27:51</CreatedDate>
+    <LastUpdated>05/20/2025 08:34:43</LastUpdated>
+  </Documentation>
+  <Instrumentation>
+    <InstrumentSet>
+      <Instrument Name="MyAXN_CHS_06U">
+        <Documentation>
+          <LongDescription>AXON chassis with 6 user-slots</LongDescription>
+          <CreatedDate>05/20/2025 08:27:55</CreatedDate>
+        </Documentation>
+        <Manufacturer>
+          <Name>ACRA CONTROL</Name>
+          <PartReference>AXN/CHS/06U</PartReference>
+        </Manufacturer>
+        <Instruments>
+          <Location Name="0">
+            <Instrument Name="MyAXN_BCU_402_C">
+              <Documentation>
+                <LongDescription>Axon backplane controller – PTPv1/v2 client or Grandmaster, dual Ethernet output</LongDescription>
+                <CreatedDate>05/20/2025 08:28:00</CreatedDate>
+              </Documentation>
+              <Manufacturer>
+                <Name>ACRA CONTROL</Name>
+                <PartReference>AXN/BCU/402/C</PartReference>
+              </Manufacturer>
+              <Settings>
+                <Setting>
+                  <Name>IP Address</Name>
+                  <Value>192.168.28.1</Value>
+                </Setting>
+                <Setting>
+                  <Name>Route External Ethernet Packets to Backplane</Name>
+                  <Value>0000</Value>
+                </Setting>
+                <Setting>
+                  <Name>Route Internal Ethernet Placed Packets to Backplane</Name>
+                  <Value>0000</Value>
+                </Setting>
+                <Setting>
+                  <Name>PTP Protocol</Name>
+                  <Value>PTPv2 Delay Req</Value>
+                </Setting>
+                <Setting>
+                  <Name>PTP Grandmaster</Name>
+                  <Value>False</Value>
+                </Setting>
+                <Setting>
+                  <Name>Synchronisation Level</Name>
+                  <Value>500</Value>
+                </Setting>
+                <Setting>
+                  <Name>Local Time Support</Name>
+                  <Value>False</Value>
+                </Setting>
+                <Setting>
+                  <Name>Local Time Offset</Name>
+                  <Value>0</Value>
+                </Setting>
+                <Setting>
+                  <Name>Disable Synchronous Acquistion Cycle</Name>
+                  <Value>False</Value>
+                </Setting>
+                <Setting>
+                  <Name>PTPv1 Subdomain</Name>
+                  <Value>_DFLT</Value>
+                </Setting>
+                <Setting>
+                  <Name>PTPv1 Sync Interval</Name>
+                  <Value>2</Value>
+                </Setting>
+                <Setting>
+                  <Name>PTPv1 Preferred Grandmaster</Name>
+                  <Value>True</Value>
+                </Setting>
+                <Setting>
+                  <Name>PTPv1 Disable BMCA</Name>
+                  <Value>False</Value>
+                </Setting>
+                <Setting>
+                  <Name>PTPv2 Subdomain</Name>
+                  <Value>0</Value>
+                </Setting>
+                <Setting>
+                  <Name>PTPv2 Announce Interval</Name>
+                  <Value>2</Value>
+                </Setting>
+                <Setting>
+                  <Name>PTPv2 Sync Interval</Name>
+                  <Value>1.0</Value>
+                </Setting>
+                <Setting>
+                  <Name>PTPv2 Priority</Name>
+                  <Value>128</Value>
+                </Setting>
+                <Setting>
+                  <Name>Fragmentation</Name>
+                  <Value>False</Value>
+                </Setting>
+                <Setting>
+                  <Name>Relative Time Counter</Name>
+                  <Value>Free running</Value>
+                </Setting>
+                <Setting>
+                  <Name>Low Latency</Name>
+                  <Value>False</Value>
+                </Setting>
+                <Setting>
+                  <Name>Secondary Header</Name>
+                  <Value>False</Value>
+                </Setting>
+                <Setting>
+                  <Name>Source Id</Name>
+                  <Value>FF</Value>
+                </Setting>
+                <Setting>
+                  <Name>Time Packet</Name>
+                  <Value>None</Value>
+                </Setting>
+                <Setting>
+                  <Name>Channel ID</Name>
+                  <Value>AABB</Value>
+                </Setting>
+                <Setting>
+                  <Name>UDP Header Transfer Format</Name>
+                  <Value>1</Value>
+                </Setting>
+                <Setting>
+                  <Name>Force 1Hz Packet Rate</Name>
+                  <Value>False</Value>
+                </Setting>
+              </Settings>
+              <Channels>
+                <Channel VendorName="Ethernet(1)" Direction="Bidirectional">
+                  <Settings>
+                    <Setting>
+                      <Name>Port Speed</Name>
+                      <Value>Autonegotiate</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Block Traffic From Other Port</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Block Traffic From Chassis</Name>
+                      <Value>False</Value>
+                    </Setting>
+                  </Settings>
+                </Channel>
+                <Channel VendorName="Ethernet(2)" Direction="Bidirectional">
+                  <Settings>
+                    <Setting>
+                      <Name>Port Speed</Name>
+                      <Value>Autonegotiate</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Block Traffic From Other Port</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Block Traffic From Chassis</Name>
+                      <Value>False</Value>
+                    </Setting>
+                  </Settings>
+                </Channel>
+                <Channel VendorName="PPSOut" Direction="Output">
+                  <Settings>
+                    <Setting>
+                      <Name>PPS Enable</Name>
+                      <Value>False</Value>
+                    </Setting>
+                  </Settings>
+                </Channel>
+              </Channels>
+              <Parameters>
+                <ParameterReference VendorName="Report" Orientation="Read">P_MyAXN_BCU_402_C_Report</ParameterReference>
+                <ParameterReference VendorName="ReadCounter" Orientation="Read">P_MyAXN_BCU_402_C_ReadCounter</ParameterReference>
+                <ParameterReference VendorName="PTPTime" Orientation="Read">P_MyAXN_BCU_402_C_PTPTime</ParameterReference>
+                <ParameterReference VendorName="EthernetStatus" Orientation="Read">P_MyAXN_BCU_402_C_EthernetStatus</ParameterReference>
+                <ParameterReference VendorName="ControllerTemperature" Orientation="Read">P_MyAXN_BCU_402_C_ControllerTemperature</ParameterReference>
+                <ParameterReference VendorName="PTPTimeError" Orientation="Read">P_MyAXN_BCU_402_C_PTPTimeError</ParameterReference>
+              </Parameters>
+            </Instrument>
+          </Location>
+          <Location Name="1" />
+          <Location Name="2" />
+          <Location Name="3">
+            <Instrument Name="MyAXN_ENC_402">
+              <Documentation>
+                <LongDescription>  IRIG-106 PCM encoder (PMF output) with Ch7</LongDescription>
+                <CreatedDate>05/20/2025 08:28:07</CreatedDate>
+              </Documentation>
+              <Manufacturer>
+                <Name>ACRA CONTROL</Name>
+                <PartReference>AXN/ENC/402</PartReference>
+              </Manufacturer>
+              <Settings>
+                <Setting>
+                  <Name>Frame Pulse Enable</Name>
+                  <Value>True</Value>
+                </Setting>
+                <Setting>
+                  <Name>PPS Enable</Name>
+                  <Value>False</Value>
+                </Setting>
+                <Setting>
+                  <Name>PPC Enable</Name>
+                  <Value>False</Value>
+                </Setting>
+                <Setting>
+                  <Name>TimeLayout</Name>
+                  <Value>ACRA_BCD</Value>
+                </Setting>
+                <Setting>
+                  <Name>Tx Offset</Name>
+                  <Value>32</Value>
+                </Setting>
+                <Setting>
+                  <Name>NRZ-L Enable</Name>
+                  <Value>True</Value>
+                </Setting>
+                <Setting>
+                  <Name>Tx Margin</Name>
+                  <Value>16</Value>
+                </Setting>
+                <Setting>
+                  <Name>Loop Gain</Name>
+                  <Value>1</Value>
+                </Setting>
+                <Setting>
+                  <Name>Axonite Connection</Name>
+                  <Value>False</Value>
+                </Setting>
+                <Setting>
+                  <Name>CRC Enable</Name>
+                  <Value>False</Value>
+                </Setting>
+                <Setting>
+                  <Name>CH7 Stream ID</Name>
+                  <Value>0</Value>
+                </Setting>
+                <Setting>
+                  <Name>LLP Buffer Allocation</Name>
+                  <Value>32768</Value>
+                </Setting>
+                <Setting>
+                  <Name>FillFromOffset</Name>
+                  <Value>5</Value>
+                </Setting>
+                <Setting>
+                  <Name>FillSize</Name>
+                  <Value>64</Value>
+                </Setting>
+                <Setting>
+                  <Name>FillAvailableSpace</Name>
+                  <Value>False</Value>
+                </Setting>
+                <Setting>
+                  <Name>PTFRFrameSubtraction</Name>
+                  <Value>32</Value>
+                </Setting>
+                <Setting>
+                  <Name>Buffer Depth</Name>
+                  <Value>4</Value>
+                </Setting>
+                <Setting>
+                  <Name>Fill Pattern</Name>
+                  <Value>AAAA</Value>
+                </Setting>
+              </Settings>
+              <Channels>
+                <Channel VendorName="PCM-Out(0)" Direction="Output">
+                  <LinkReference>Link_MyAXN_ENC_402_PCM-Out(0)</LinkReference>
+                  <Settings>
+                    <Setting>
+                      <Name>Pcm Code</Name>
+                      <Value>NRZ-L</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Clock Phase</Name>
+                      <Value>0</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Polarity</Name>
+                      <Value>True</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>PCM Enable</Name>
+                      <Value>True</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Maximum Supported Bit Rate</Name>
+                      <Value>40Mbps</Value>
+                    </Setting>
+                  </Settings>
+                </Channel>
+                <Channel VendorName="PCM-Out(1)" Direction="Output">
+                  <Settings>
+                    <Setting>
+                      <Name>Pcm Code</Name>
+                      <Value>NRZ-L</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Clock Phase</Name>
+                      <Value>0</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Polarity</Name>
+                      <Value>True</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>PCM Enable</Name>
+                      <Value>True</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Maximum Supported Bit Rate</Name>
+                      <Value>40Mbps</Value>
+                    </Setting>
+                  </Settings>
+                </Channel>
+                <Channel VendorName="PMF-Out" Direction="Output">
+                  <Settings>
+                    <Setting>
+                      <Name>Pcm Code</Name>
+                      <Value>NRZ-L</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Amplitude</Name>
+                      <Value>4</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Polarity</Name>
+                      <Value>True</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Enabled</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Output</Name>
+                      <Value>B</Value>
+                    </Setting>
+                  </Settings>
+                </Channel>
+                <Channel VendorName="TTL-Out" Direction="Output">
+                  <Settings>
+                    <Setting>
+                      <Name>Pcm Code</Name>
+                      <Value>NRZ-L</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Clock Phase</Name>
+                      <Value>0</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Polarity</Name>
+                      <Value>True</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>PCM Enable</Name>
+                      <Value>True</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Emulate_ARINC_717</Name>
+                      <Value>False</Value>
+                    </Setting>
+                  </Settings>
+                </Channel>
+                <Channel VendorName="BackplaneEthernet" Direction="Input">
+                  <Settings>
+                    <Setting>
+                      <Name>Traffic Priority</Name>
+                      <Value>iNET-X</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>VLAN Support</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Traffic Type</Name>
+                      <Value>iNET-X</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Packet Content Local</Name>
+                      <Value>True</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Source IP Address (iNet-X)</Name>
+                      <Value>True</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Source UDP Port (iNet-X)</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Source MAC Address (iNet-X)</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Destination IP Address (iNet-X)</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Destination UDP Port (iNet-X)</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Destination MAC Address (iNet-X)</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Stream ID (iNet-X)</Name>
+                      <Value>True</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Source IP Address (IENA)</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Source UDP Port (IENA)</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Source MAC Address (IENA)</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Destination IP Address (IENA)</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Destination UDP Port (IENA)</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Destination MAC Address (IENA)</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Key (IENA)</Name>
+                      <Value>False</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Classifier Offset(0)</Name>
+                      <Value>Not Used</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Classifier Offset(1)</Name>
+                      <Value>Not Used</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Classifier Offset(2)</Name>
+                      <Value>Not Used</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Classifier Offset(3)</Name>
+                      <Value>Not Used</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Classifier Offset(4)</Name>
+                      <Value>Not Used</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Classifier Offset(5)</Name>
+                      <Value>Not Used</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Classifier Offset(6)</Name>
+                      <Value>Not Used</Value>
+                    </Setting>
+                    <Setting>
+                      <Name>Classifier Offset(7)</Name>
+                      <Value>Not Used</Value>
+                    </Setting>
+                  </Settings>
+                </Channel>
+              </Channels>
+              <Parameters>
+                <ParameterReference VendorName="Time48" Orientation="Read">P_MyAXN_ENC_402_Time48</ParameterReference>
+                <ParameterReference VendorName="Status" Orientation="Read">P_MyAXN_ENC_402_Status</ParameterReference>
+                <ParameterReference VendorName="Report" Orientation="Read">P_MyAXN_ENC_402_Report</ParameterReference>
+                <ParameterReference VendorName="RawCount" Orientation="Read">P_MyAXN_ENC_402_RawCount</ParameterReference>
+                <ParameterReference VendorName="Ch4PacketCount" Orientation="Read">P_MyAXN_ENC_402_Ch4PacketCount</ParameterReference>
+                <ParameterReference VendorName="Ch7PacketCount" Orientation="Read">P_MyAXN_ENC_402_Ch7PacketCount</ParameterReference>
+                <ParameterReference VendorName="DropCount" Orientation="Read">P_MyAXN_ENC_402_DropCount</ParameterReference>
+                <ParameterReference VendorName="FrameCount" Orientation="Read">P_MyAXN_ENC_402_FrameCount</ParameterReference>
+                <ParameterReference VendorName="SyncCount" Orientation="Read">P_MyAXN_ENC_402_SyncCount</ParameterReference>
+                <ParameterReference VendorName="LLPDiscardCount" Orientation="Read">P_MyAXN_ENC_402_LLPDiscardCount</ParameterReference>
+                <ParameterReference VendorName="HLPDiscardCount" Orientation="Read">P_MyAXN_ENC_402_HLPDiscardCount</ParameterReference>
+                <ParameterReference VendorName="LLPFlushCount" Orientation="Read">P_MyAXN_ENC_402_LLPFlushCount</ParameterReference>
+                <ParameterReference VendorName="PTFR" Orientation="Read">P_MyAXN_ENC_402_PTFR</ParameterReference>
+                <ParameterReference VendorName="ReadCounter" Orientation="Read">P_MyAXN_ENC_402_ReadCounter</ParameterReference>
+                <ParameterReference VendorName="ModuleTemperature" Orientation="Read">P_MyAXN_ENC_402_ModuleTemperature</ParameterReference>
+                <ParameterReference VendorName="Year" Orientation="Read">P_MyAXN_ENC_402_Year</ParameterReference>
+                <ParameterReference VendorName="DayOfYear" Orientation="Read">P_MyAXN_ENC_402_DayOfYear</ParameterReference>
+              </Parameters>
+            </Instrument>
+          </Location>
+          <Location Name="4" />
+          <Location Name="5" />
+          <Location Name="6" />
+        </Instruments>
+      </Instrument>
+    </InstrumentSet>
+  </Instrumentation>
+  <Parameters>
+    <ParameterSet>
+      <Parameter Name="P_MyAXN_BCU_402_C_ControllerTemperature" Orientation="Read">
+        <BaseUnit>Celsius</BaseUnit>
+        <DataFormat>OffsetBinary</DataFormat>
+        <SizeInBits>16</SizeInBits>
+        <RangeMaximum>125</RangeMaximum>
+        <RangeMinimum>-55</RangeMinimum>
+      </Parameter>
+      <Parameter Name="P_MyAXN_BCU_402_C_EthernetStatus" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyAXN_BCU_402_C_PTPTime" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>64</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyAXN_BCU_402_C_PTPTimeError" Orientation="Read">
+        <BaseUnit>Second</BaseUnit>
+        <DataFormat>TwosComplement</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyAXN_BCU_402_C_ReadCounter" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyAXN_BCU_402_C_Report" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyAXN_ENC_402_Ch4PacketCount" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyAXN_ENC_402_Ch7PacketCount" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyAXN_ENC_402_DayOfYear" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyAXN_ENC_402_DropCount" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyAXN_ENC_402_FrameCount" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>32</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyAXN_ENC_402_HLPDiscardCount" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyAXN_ENC_402_LLPDiscardCount" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyAXN_ENC_402_LLPFlushCount" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyAXN_ENC_402_ModuleTemperature" Orientation="Read">
+        <BaseUnit>Celsius</BaseUnit>
+        <DataFormat>OffsetBinary</DataFormat>
+        <SizeInBits>16</SizeInBits>
+        <RangeMaximum>125</RangeMaximum>
+        <RangeMinimum>-55</RangeMinimum>
+      </Parameter>
+      <Parameter Name="P_MyAXN_ENC_402_PTFR" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>512</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyAXN_ENC_402_RawCount" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyAXN_ENC_402_ReadCounter" Orientation="Read">
+        <BaseUnit>Count</BaseUnit>
+        <DataFormat>OffsetBinary</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyAXN_ENC_402_Report" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyAXN_ENC_402_Status" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyAXN_ENC_402_SyncCount" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>32</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyAXN_ENC_402_Time48" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>48</SizeInBits>
+      </Parameter>
+      <Parameter Name="P_MyAXN_ENC_402_Year" Orientation="Read">
+        <BaseUnit>BitVector</BaseUnit>
+        <DataFormat>BitVector</DataFormat>
+        <SizeInBits>16</SizeInBits>
+      </Parameter>
+    </ParameterSet>
+  </Parameters>
+  <Links>
+    <LinkSet>
+      <Link Name="Link_MyAXN_ENC_402_PCM-Out(0)">
+        <Type>PCM</Type>
+        <Packages>
+          <PackageReference>MyIRIG-106-Ch-4Package_4_256x16</PackageReference>
+        </Packages>
+      </Link>
+    </LinkSet>
+  </Links>
+  <Packages>
+    <PackageSet>
+      <IRIG-106-Ch-4 Name="MyIRIG-106-Ch-4Package_4_256x16">
+        <PackageRate>64</PackageRate>
+        <Properties>
+          <MajorFrameProperties>
+            <BitsPerMinorFrame>4096</BitsPerMinorFrame>
+            <MinorFramesPerMajorFrame>16</MinorFramesPerMajorFrame>
+            <DefaultDataBitsPerWord>16</DefaultDataBitsPerWord>
+            <DefaultMostSignificantBit>First</DefaultMostSignificantBit>
+            <FillPattern>AAAA</FillPattern>
+          </MajorFrameProperties>
+          <SynchronizationStrategy>
+            <SyncWord>11111110011010110010100001000000</SyncWord>
+            <SubframeSynchronizationStrategy>
+              <SFID>
+                <MinorFrameOffset_Words>1</MinorFrameOffset_Words>
+                <StartValue>0</StartValue>
+                <Increment>1</Increment>
+                <MostSignificantBit>First</MostSignificantBit>
+              </SFID>
+            </SubframeSynchronizationStrategy>
+          </SynchronizationStrategy>
+        </Properties>
+        <Content>
+          <Mapping>
+            <ParameterReference>P_MyAXN_ENC_402_PTFR</ParameterReference>
+            <Location>
+              <MinorFrameNumber>1</MinorFrameNumber>
+              <Offset_Words>5</Offset_Words>
+              <Occurrences>16</Occurrences>
+            </Location>
+          </Mapping>
+        </Content>
+      </IRIG-106-Ch-4>
+    </PackageSet>
+  </Packages>
+</xidml>
