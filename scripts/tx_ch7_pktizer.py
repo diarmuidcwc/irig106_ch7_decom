@@ -4,7 +4,6 @@
 Emulate packetizer packets
 """
 
-import AcraNetwork.McastSocket as mc
 import AcraNetwork.IRIG106.Chapter7 as ch7
 import AcraNetwork.SimpleEthernet as eth
 import AcraNetwork.iNetX as ix
@@ -17,8 +16,16 @@ import argparse
 import random
 
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 VERSION = "0.1"
+AVE_PKT_SIZE_BYTES = 1400
+
+
+def accurate_sleep(duration, get_now=time.perf_counter):
+    now = get_now()
+    end = now + duration
+    while now < end:
+        now = get_now()
 
 
 def auto_int(x):
@@ -32,6 +39,7 @@ def create_parser():
     parser.add_argument("--streamid", type=auto_int, required=True, default=0xDC, help="stream ID of the inetx packet")
     parser.add_argument("--offset", type=auto_int, required=True, default=0xDC, help="stream ID of the inetx packet")
     parser.add_argument("--interface", type=str, required=False, default="eth0", help="ethernet interface")
+    parser.add_argument("--bitrate", type=float, required=False, default=0.5, help="target bit rate in Mbps")
     parser.add_argument("--version", action="version", version="%(prog)s {}".format(VERSION))
 
     return parser
@@ -50,7 +58,7 @@ def get_pkts() -> typing.Generator[tuple[bytes, bool], None, None]:
     count = 0
 
     while True:
-        pkt_len = random.randint(1, 100)
+        pkt_len = random.randint(1, 175)
         up.payload = struct.pack(f">{pkt_len}Q", *list(range(count, count + pkt_len)))
         ip.payload = up.pack()
         ep.payload = ip.pack()
@@ -61,8 +69,17 @@ def encapsulate_inetx(buffer: bytes, streamid: int = 1, seq: int = 0) -> bytes:
     inetxp = ix.iNetX()
     inetxp.streamid = streamid
     inetxp.payload = buffer
-    inetxp.sequence = seq % (2 ^ 32)
+    inetxp.sequence = seq % pow(2, 32)
     return inetxp.pack()
+
+
+def get_pkt_gap(ave_pkt_len_bytes: int, bitrate: float) -> float:
+    pps = bitrate / (ave_pkt_len_bytes * 8)
+    # tx_time = pps * ave_pkt_len_bytes * 8 * 1e-9
+    tx_time = 15e-9 * pps
+    gap = (1.0 / pps) - tx_time
+    logging.info(f"PPS={pps} tx_time={tx_time} gap={gap}")
+    return gap
 
 
 def get_pcm_frame(offset_ptfr: int = 0):
@@ -75,21 +92,24 @@ def get_pcm_frame(offset_ptfr: int = 0):
         yield pcm_frame
 
 
-def main(streamid: int, pcmoffset: int):
+def main(streamid: int, pcmoffset: int, bitrate: float):
+
+    gap_s = get_pkt_gap(AVE_PKT_SIZE_BYTES, bitrate * 1e6)
     tx_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     pkt_count = 0
     for pcm_frame in get_pcm_frame(pcmoffset):
         inetx_payload = encapsulate_inetx(pcm_frame, streamid, pkt_count)
-        print(".", end="")
+        if pkt_count % 1000 == 0:
+            print(".", end="")
         try:
             tx_socket.sendto(inetx_payload, ("235.0.0.1", 3399))
         except:
             pass
-        time.sleep(1)
+        accurate_sleep(gap_s)
         pkt_count += 1
 
 
 if __name__ == "__main__":
     parser = create_parser()
     args = parser.parse_args()
-    main(args.streamid, args.offset)
+    main(args.streamid, args.offset, args.bitrate)
