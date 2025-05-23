@@ -19,6 +19,7 @@ import AcraNetwork.iNetX as ix
 import logging
 import argparse
 import typing
+import struct
 
 VERSION = "0.1"
 OFFSET_TO_INETX = 0x2A
@@ -64,6 +65,7 @@ def main(streamid: int, device: str, offset: int, length: typing.Optional[int]):
     sock.bind((device, 0x3))
     remainder = None
     prev_seq = None
+    prev_eth_count = None
 
     eth_p = bytes()
     first_PTFR = True
@@ -88,6 +90,7 @@ def main(streamid: int, device: str, offset: int, length: typing.Optional[int]):
                 if prev_seq is not None:
                     if prev_seq + 1 != inetx_pkt.sequence:
                         logging.error(f"Dropped a packet at inetx level. Prev={prev_seq}, Cur={inetx_pkt.sequence}")
+
                 prev_seq = inetx_pkt.sequence
 
                 logging.debug(f"Received inetx packet={repr(inetx_pkt)}")
@@ -106,7 +109,16 @@ def main(streamid: int, device: str, offset: int, length: typing.Optional[int]):
                                     logging.debug("Ignoring FILL packets")
                                 elif p.fragment == ch7.PTDPFragment.COMPLETE or p.fragment == ch7.PTDPFragment.LAST:
                                     eth_p += p.payload
-                                    logging.debug(f"Sending an ethernet packet of lenght={p.length}")
+                                    logging.debug(f"Sending an ethernet packet of length={p.length}")
+                                    print(".", end="")
+                                    (count,) = struct.unpack_from(">Q", eth_p, 0x2A)
+                                    if prev_eth_count is not None:
+                                        if prev_eth_count + 1 != count:
+                                            logging.error(
+                                                f"Encapsulated packet dropp. Prev={prev_eth_count} current={count}"
+                                            )
+                                            exit()
+                                    prev_eth_count = count
                                     sock.send(eth_p)
                                     eth_p = bytes()
                         elif remainder is not None:

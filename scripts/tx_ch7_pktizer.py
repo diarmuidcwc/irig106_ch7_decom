@@ -59,9 +59,10 @@ def get_pkts() -> typing.Generator[tuple[bytes, bool], None, None]:
 
     while True:
         pkt_len = random.randint(1, 175)
-        up.payload = struct.pack(f">{pkt_len}Q", *list(range(count, count + pkt_len)))
+        up.payload = struct.pack(">Q", count) + struct.pack(f">{pkt_len}Q", *list(range(count, count + pkt_len)))
         ip.payload = up.pack()
         ep.payload = ip.pack()
+        count += 1
         yield ep.pack(fcs=True), False
 
 
