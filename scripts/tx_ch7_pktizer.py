@@ -16,7 +16,7 @@ import argparse
 import random
 
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 VERSION = "0.1"
 AVE_PKT_SIZE_BYTES = 1400
 
@@ -55,15 +55,17 @@ def get_pkts() -> typing.Generator[tuple[bytes, bool], None, None]:
     up = eth.UDP()
     up.dstport = 4444
     up.srcport = 5555
-    count = 0
+    count = 1
 
     while True:
-        pkt_len = random.randint(1, 175)
+        pkt_len = count
         up.payload = struct.pack(">Q", count) + struct.pack(f">{pkt_len}Q", *list(range(count, count + pkt_len)))
         ip.payload = up.pack()
         ep.payload = ip.pack()
-        count += 1
-        yield ep.pack(fcs=True), False
+        _payload = ep.pack(fcs=True)
+        logging.debug(f"Generated UDP packet with count {count} len ={len(_payload)}")
+        count = (count % 175) + 1
+        yield _payload, False
 
 
 def encapsulate_inetx(buffer: bytes, streamid: int = 1, seq: int = 0) -> bytes:
