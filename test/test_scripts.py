@@ -1,5 +1,5 @@
 import unittest
-from scripts import tx_ch7_pktizer, pcm_pktizer_ch7_decom
+from scripts import tx_ch7_pktizer
 import AcraNetwork.IRIG106.Chapter7 as ch7
 import struct
 import logging

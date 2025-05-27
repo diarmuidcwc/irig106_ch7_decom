@@ -66,6 +66,7 @@ def main(streamid: int, device: str, offset: int, length: typing.Optional[int]):
     remainder = None
     prev_seq = None
     prev_eth_count = None
+    pkt_count = 0
 
     eth_p = bytes()
     first_PTFR = True
@@ -110,15 +111,20 @@ def main(streamid: int, device: str, offset: int, length: typing.Optional[int]):
                                 elif p.fragment == ch7.PTDPFragment.COMPLETE or p.fragment == ch7.PTDPFragment.LAST:
                                     eth_p += p.payload
                                     logging.debug(f"Sending an ethernet packet of length={p.length}")
-                                    print(".", end="")
+                                    pkt_count += 1
                                     (count,) = struct.unpack_from(">Q", eth_p, 0x2A)
                                     if prev_eth_count is not None:
                                         if prev_eth_count + 1 != count:
                                             logging.error(
                                                 f"Encapsulated packet dropp. Prev={prev_eth_count} current={count}"
                                             )
-                                            exit()
-                                    prev_eth_count = count
+
+                                    prev_eth_count = count % 175
+                                    if pkt_count % 5000 == 0:
+                                        print(f"{pkt_count} pkts rx")
+                                    elif pkt_count % 100 == 0:
+                                        print(".", end="")
+
                                     sock.send(eth_p)
                                     eth_p = bytes()
                         elif remainder is not None:

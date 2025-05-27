@@ -1,1 +1,1 @@
-AcraNetwork>=1.2.1
+AcraNetwork>=1.2.4

@@ -16,7 +16,7 @@ import argparse
 import random
 
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 VERSION = "0.1"
 AVE_PKT_SIZE_BYTES = 1400
 
