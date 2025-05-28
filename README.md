@@ -24,11 +24,24 @@ When running locally add src to PYTHONPATH
 
 ## Packet generation
 
-Make sure the routing for the multicast packets is to the eth0 interface
+Once off, create the python environment
+```bash
+python3 -m venv .venv
+./.venv/bin/activate
+pip install -r requirements.txt
 ```
-sudo route add 235.0.0.1 dev eth0
-```
-Then to run the transmission
-```
- ./scripts/tx_ch7_pktizer.py --streamid 0xdc --offset 0 --bitrate 10
+
+Make sure the routing for the multicast packets is to the eth interface
+Then to run the transmission and receiption use the following
+Customise the iface to your particular machine
+
+These commands can be run on the same machine or different machines
+
+
+```bash
+iface=enp2s0
+export PYTHONPATH=src
+sudo route add 235.0.0.1 dev $iface
+./scripts/tx_ch7_pktizer.py --streamid 0xdc --offset 0 --bitrate 10 --interface $iface
+sudo ./.venv/bin/python scripts/pcm_pktizer_ch7_decom.py  --streamid 0xdc --interface $iface
 ```
