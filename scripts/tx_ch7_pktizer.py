@@ -58,13 +58,13 @@ def get_pkts() -> typing.Generator[tuple[bytes, bool], None, None]:
     count = 1
 
     while True:
-        pkt_len = count
+        pkt_len = (count % 175) + 1
         up.payload = struct.pack(">Q", count) + struct.pack(f">{pkt_len}Q", *list(range(count, count + pkt_len)))
         ip.payload = up.pack()
         ep.payload = ip.pack()
         _payload = ep.pack(fcs=True)
         logging.debug(f"Generated UDP packet with count {count} len ={len(_payload)}")
-        count = (count % 175) + 1
+        count += 1
         yield _payload, False
 
 

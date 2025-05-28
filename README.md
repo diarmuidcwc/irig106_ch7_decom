@@ -1,5 +1,25 @@
 # irig106_ch7_decom
 
+This repo contains two applications
+
+1. tx_ch7_pktizer.py
+2. pcm_pktizer_ch7_decom.py
+
+## tx_ch7_pktizer.py
+
+This emulates an inetx packetizer which encapsulates a PCM frame. The PCM frame contains
+Chapter7 data from a specified offset (command line argument).
+The script encapsulates UDP packets with a counter inside the chapter 7 data
+
+## pcm_pktizer_ch7_decom.py
+
+This will capture inetx packetizer packets, decom the chapter 7 payload and retransmit the encapsulated
+packets
+
+So the generated UDP packets from tx_ch7_pktizer.py shoudl be seen at the output of the pcm_pktizer_ch7.decom.py
+
+Run the tx on one machine and the pcm_pktizer on the decom development board
+
 When running locally add src to PYTHONPATH
 
 ## Packet generation
