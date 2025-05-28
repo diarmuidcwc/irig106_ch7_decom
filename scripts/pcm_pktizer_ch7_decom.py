@@ -30,7 +30,7 @@ INETX_HEADER_LEN = 28
 MIN_INETX_PKT_LEN = OFFSET_TO_INETX + INETX_HEADER_LEN
 
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.CRITICAL)
 
 
 def auto_int(x):
@@ -82,19 +82,31 @@ def transmit_worker(tx_sock: socket.socket, tx_queue: queue.Queue):
             tx_queue.task_done()
 
 
+def receive_worker(rx_sock: socket.socket, rx_queue: queue.Queue):
+    while True:
+        (data, addr) = rx_sock.recvfrom(2000)
+        try:
+            rx_queue.put_nowait(data)
+        except queue.Full:
+            logging.error("RX queue full, dropping packet")
+
+
 def main(streamid: int, device: str, offset: int, length: typing.Optional[int], checkwrap: bool):
 
     # Transmit queue and socket
-    tx_queue = queue.Queue(maxsize=100)
+    tx_queue = queue.Queue(maxsize=500)
     tx_sock = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
     tx_sock.bind((device, 0))
     tx_thread = threading.Thread(target=transmit_worker, args=(tx_sock, tx_queue), daemon=True)
     tx_thread.start()
 
     # Receive socket
-    sock = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
-    sock.settimeout(None)
-    sock.bind((device, 0x3))
+    rx_queue = queue.Queue(maxsize=500)
+    rx_sock = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
+    rx_sock.settimeout(None)
+    rx_sock.bind((device, 0x3))
+    rx_thread = threading.Thread(target=receive_worker, args=(rx_sock, rx_queue), daemon=True)
+    rx_thread.start()
 
     # core of app
     remainder = None
@@ -114,7 +126,7 @@ def main(streamid: int, device: str, offset: int, length: typing.Optional[int], 
 
     try:
         while True:
-            (data, addr) = sock.recvfrom(2000)
+            data = rx_queue.get()
             inetx_pkt = ix.iNetX()
 
             if len(data) > MIN_INETX_PKT_LEN:
@@ -127,6 +139,7 @@ def main(streamid: int, device: str, offset: int, length: typing.Optional[int], 
                 else:
                     if prev_seq is not None:
                         if prev_seq + 1 != inetx_pkt.sequence:
+                            print("*", end="")
                             logging.error(f"Dropped a packet at inetx level. Prev={prev_seq}, Cur={inetx_pkt.sequence}")
 
                     prev_seq = inetx_pkt.sequence
@@ -176,8 +189,9 @@ def main(streamid: int, device: str, offset: int, length: typing.Optional[int], 
     finally:
         tx_queue.put(None)
         tx_thread.join()
-        sock.close()
+        rx_sock.close()
         tx_sock.close()
+
         return 0
 
 
