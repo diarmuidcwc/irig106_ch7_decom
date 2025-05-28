@@ -67,6 +67,7 @@ def main(streamid: int, device: str, offset: int, length: typing.Optional[int]):
     prev_seq = None
     prev_eth_count = None
     pkt_count = 0
+    golay = ch7.Golay.Golay()
 
     eth_p = bytes()
     first_PTFR = True
@@ -98,7 +99,7 @@ def main(streamid: int, device: str, offset: int, length: typing.Optional[int]):
                 if inetx_pkt.streamid == streamid:
                     ch7_buffer = inetx_pkt.payload[ch7_slice]
                     logging.debug(f"ch7_buf_len = {len(ch7_buffer)}")
-                    ch7_pkt = ch7.PTFR()
+                    ch7_pkt = ch7.PTFR(golay)
                     ch7_pkt.length = len(ch7_buffer)
                     ch7_pkt.unpack(ch7_buffer)
                     for p, remainder, e in ch7_pkt.get_aligned_payload(first_PTFR, remainder):
