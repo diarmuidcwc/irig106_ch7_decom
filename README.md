@@ -24,13 +24,21 @@ When running locally add src to PYTHONPATH
 
 ## Packet generation
 
+Once off, create the python environment
+```bash
+python3 -m venv .venv
+./.venv/bin/activate
+pip install -r requirements.txt
+```
+
 Make sure the routing for the multicast packets is to the eth interface
 Then to run the transmission and receiption use the following
 Customise the iface to your particular machine
 
 These commands can be run on the same machine or different machines
 
-```
+
+```bash
 iface=enp2s0
 export PYTHONPATH=src
 sudo route add 235.0.0.1 dev $iface
