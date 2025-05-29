@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="irig106_ch7_decom",
-    version="0.2",
+    version="0.3",
     author="Diarmuid Collins",
     author_email="dcollins@curtisswright.com",
     url="https://github.com/diarmuidcwc/irig107_ch7_decom.git",
