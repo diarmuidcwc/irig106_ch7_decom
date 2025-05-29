@@ -22,13 +22,15 @@ import struct
 import threading
 import queue
 import sys
+import os
 
 VERSION = "0.1"
 OFFSET_TO_INETX = 0x2A
 OFFSET_TO_INETX_PAYLOAD = OFFSET_TO_INETX + 28
 INETX_HEADER_LEN = 28
 MIN_INETX_PKT_LEN = OFFSET_TO_INETX + INETX_HEADER_LEN
-
+A72CORE1 = 4
+A72CORE2 = 5
 
 logging.basicConfig(level=logging.CRITICAL)
 
@@ -199,6 +201,12 @@ def main(streamid: int, device: str, offset: int, length: typing.Optional[int], 
 
 
 if __name__ == "__main__":
+    try:
+        os.sched_setaffinity(0, {A72CORE1, A72CORE2})
+    except Exception as e:
+        logging.error(f"Failed to run onm the A72 core")
+    else:
+        logging.info("Running on A72 Core")
     parser = create_parser()
     args = parser.parse_args()
     ret = main(args.streamid, args.interface, args.offset, args.length, args.checkwrap)

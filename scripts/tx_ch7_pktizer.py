@@ -18,7 +18,7 @@ import random
 
 logging.basicConfig(level=logging.INFO)
 VERSION = "0.1"
-AVE_PKT_SIZE_BYTES = 1400
+AVE_PKT_SIZE_BYTES = 1500
 
 
 def accurate_sleep(duration, get_now=time.perf_counter):
@@ -86,7 +86,7 @@ def get_pkt_gap(ave_pkt_len_bytes: int, bitrate: float) -> float:
 
 
 def get_pcm_frame(offset_ptfr: int = 0):
-    pcm_frame_len = 1024
+    pcm_frame_len = 1400
     ptfr_len = pcm_frame_len - offset_ptfr - 4
     zero_buf = struct.pack(">B", 0) * offset_ptfr
     for ptfr in ch7.datapkts_to_ptfr(get_pkts(), ptfr_len=ptfr_len):
