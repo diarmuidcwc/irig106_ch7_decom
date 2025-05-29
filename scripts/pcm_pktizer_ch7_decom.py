@@ -78,17 +78,6 @@ def transmit_worker(tx_sock: socket.socket, tx_queue: queue.Queue):
             tx_sock.send(packet)
         except Exception as e:
             logging.error("TX error:", e)
-        finally:
-            tx_queue.task_done()
-
-
-def receive_worker(rx_sock: socket.socket, rx_queue: queue.Queue):
-    while True:
-        (data, addr) = rx_sock.recvfrom(2000)
-        try:
-            rx_queue.put_nowait(data)
-        except queue.Full:
-            logging.error("RX queue full, dropping packet")
 
 
 class MinimaliNetX(object):
@@ -116,18 +105,16 @@ def main(streamid: int, device: str, offset: int, length: typing.Optional[int], 
     tx_thread.start()
 
     # Receive socket
-    rx_queue = queue.Queue(maxsize=500)
     rx_sock = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
     rx_sock.settimeout(None)
     rx_sock.bind((device, 0x3))
-    rx_thread = threading.Thread(target=receive_worker, args=(rx_sock, rx_queue), daemon=True)
-    rx_thread.start()
 
     # core of app
     remainder = None
     prev_seq = None
     prev_eth_count = None
     pkt_count = 0
+    drop_pkt_count = 0
     golay = ch7.Golay.Golay()
 
     eth_p = bytes()
@@ -141,7 +128,7 @@ def main(streamid: int, device: str, offset: int, length: typing.Optional[int], 
 
     try:
         while True:
-            data = rx_queue.get()
+            (data, addr) = rx_sock.recvfrom(2000)
             inetx_pkt = MinimaliNetX()
 
             if len(data) > MIN_INETX_PKT_LEN:
@@ -154,15 +141,15 @@ def main(streamid: int, device: str, offset: int, length: typing.Optional[int], 
                 else:
                     if prev_seq is not None:
                         if prev_seq + 1 != inetx_pkt.sequence:
-                            print("*", end="")
+                            drop_pkt_count += 1
                             logging.error(f"Dropped a packet at inetx level. Prev={prev_seq}, Cur={inetx_pkt.sequence}")
 
                     prev_seq = inetx_pkt.sequence
 
-                    logging.debug(f"Received inetx packet={repr(inetx_pkt)}")
+                    # logging.debug(f"Received inetx packet={repr(inetx_pkt)}")
                     if inetx_pkt.streamid == streamid:
                         ch7_buffer = data[ch7_slice]
-                        logging.debug(f"ch7_buf_len = {len(ch7_buffer)}")
+                        # logging.debug(f"ch7_buf_len = {len(ch7_buffer)}")
                         ch7_pkt = ch7.PTFR(golay)
                         ch7_pkt.length = len(ch7_buffer)
                         ch7_pkt.unpack(ch7_buffer)
@@ -170,12 +157,13 @@ def main(streamid: int, device: str, offset: int, length: typing.Optional[int], 
                             first_PTFR = False
                             if p is not None:
                                 if p.length != 0:
-                                    logging.debug(f"PTDP={p}")
+                                    # logging.debug(f"PTDP={p}")
                                     if p.content == ch7.PTDPContent.FILL:
-                                        logging.debug("Ignoring FILL packets")
+                                        pass
+                                        # logging.debug("Ignoring FILL packets")
                                     elif p.fragment == ch7.PTDPFragment.COMPLETE or p.fragment == ch7.PTDPFragment.LAST:
                                         eth_p += p.payload
-                                        logging.debug(f"Sending an ethernet packet of length={p.length}")
+                                        # logging.debug(f"Sending an ethernet packet of length={p.length}")
                                         pkt_count += 1
                                         # Get rid of this check
                                         if len(eth_p) > 50 and checkwrap:
@@ -188,13 +176,13 @@ def main(streamid: int, device: str, offset: int, length: typing.Optional[int], 
 
                                             prev_eth_count = count
                                         if pkt_count % 5000 == 0:
-                                            print(f"{pkt_count} pkts rx")
+                                            print(f"{pkt_count:10,d} pkts rx {drop_pkt_count:10,d} pkts dropped")
                                         elif pkt_count % 100 == 0:
                                             print(".", end="")
 
                                         try:
                                             tx_queue.put_nowait(eth_p)
-                                        except queue.Full:
+                                        except Exception as e:
                                             logging.error("TX queue full, dropping packet")
                                         eth_p = bytes()
                             elif remainder is not None:
