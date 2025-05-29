@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 Decom ch7packets from a packetizer source
@@ -15,7 +15,6 @@ The script will unpack the data, extract the ethernet packlets and retransmit th
 
 import socket
 import AcraNetwork.IRIG106.Chapter7 as ch7
-import AcraNetwork.iNetX as ix
 import logging
 import argparse
 import typing
@@ -26,6 +25,7 @@ import sys
 
 VERSION = "0.1"
 OFFSET_TO_INETX = 0x2A
+OFFSET_TO_INETX_PAYLOAD = OFFSET_TO_INETX + 28
 INETX_HEADER_LEN = 28
 MIN_INETX_PKT_LEN = OFFSET_TO_INETX + INETX_HEADER_LEN
 
@@ -91,6 +91,21 @@ def receive_worker(rx_sock: socket.socket, rx_queue: queue.Queue):
             logging.error("RX queue full, dropping packet")
 
 
+class MinimaliNetX(object):
+    def __init__(self):
+        self.streamid: int = None
+        self.sequence: int = None
+        self.control: int = None
+
+    def unpack(self, buffer: bytes):
+        (self.control, self.streamid, self.sequence) = struct.unpack_from(">III", buffer)
+        if self.control != 0x1100_0000:
+            raise Exception("Not an inetx packet")
+
+    def __repr__(self):
+        return f"Streamid={self.streamid:#0X} Sequence={self.sequence}"
+
+
 def main(streamid: int, device: str, offset: int, length: typing.Optional[int], checkwrap: bool):
 
     # Transmit queue and socket
@@ -120,14 +135,14 @@ def main(streamid: int, device: str, offset: int, length: typing.Optional[int], 
 
     # Define the slice of interest from the data
     if length is not None:
-        ch7_slice = slice(offset * 2, (offset + length) * 2)
+        ch7_slice = slice(OFFSET_TO_INETX_PAYLOAD + offset * 2, (OFFSET_TO_INETX_PAYLOAD + offset + length) * 2)
     else:
-        ch7_slice = slice(offset * 2, None)
+        ch7_slice = slice(OFFSET_TO_INETX_PAYLOAD + offset * 2, None)
 
     try:
         while True:
             data = rx_queue.get()
-            inetx_pkt = ix.iNetX()
+            inetx_pkt = MinimaliNetX()
 
             if len(data) > MIN_INETX_PKT_LEN:
                 # logging.debug(f"Received data of length {len(data)} from {addr}")
@@ -146,7 +161,7 @@ def main(streamid: int, device: str, offset: int, length: typing.Optional[int], 
 
                     logging.debug(f"Received inetx packet={repr(inetx_pkt)}")
                     if inetx_pkt.streamid == streamid:
-                        ch7_buffer = inetx_pkt.payload[ch7_slice]
+                        ch7_buffer = data[ch7_slice]
                         logging.debug(f"ch7_buf_len = {len(ch7_buffer)}")
                         ch7_pkt = ch7.PTFR(golay)
                         ch7_pkt.length = len(ch7_buffer)
